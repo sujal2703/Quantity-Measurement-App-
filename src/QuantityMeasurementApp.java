@@ -1,9 +1,11 @@
 public class QuantityMeasurementApp {
 
-    // Step 1: Enum to define units and their conversion factors to a base unit (Feet)
+    // Extended Enum to include YARDS and CENTIMETERS
     public enum LengthUnit {
         FEET(1.0),
-        INCH(1.0 / 12.0); // 1 Inch is 1/12th of a Foot
+        INCH(1.0 / 12.0),
+        YARD(3.0),                     // 1 Yard = 3 Feet
+        CENTIMETER(0.393701 / 12.0);   // 1 cm = 0.393701 inches, and 1 inch = 1/12 feet
 
         private final double conversionFactorToFeet;
 
@@ -16,7 +18,7 @@ public class QuantityMeasurementApp {
         }
     }
 
-    // Step 2: Generic QuantityLength class replacing separate Feet and Inches classes
+    // Generic QuantityLength class (Remains untouched from UC3)
     public static class QuantityLength {
         private final double value;
         private final LengthUnit unit;
@@ -31,45 +33,50 @@ public class QuantityMeasurementApp {
 
         @Override
         public boolean equals(Object obj) {
-            // 1. Reflexive check
             if (this == obj) return true;
-
-            // 2. Null and Type safety check
             if (obj == null || getClass() != obj.getClass()) return false;
 
-            // 3. Cast to QuantityLength
             QuantityLength that = (QuantityLength) obj;
 
-            // 4. Convert both values to the common base unit (Feet) for comparison
             double thisValueInBase = this.value * this.unit.getConversionFactor();
             double thatValueInBase = that.value * that.unit.getConversionFactor();
 
-            // 5. Value-based equality check
-            // Note: Math.round is used here to avoid standard IEEE 754 floating-point precision issues
+            // Value-based equality check using precision rounding
             return Double.compare(
-                    Math.round(thisValueInBase * 10000.0) / 10000.0,
-                    Math.round(thatValueInBase * 10000.0) / 10000.0
+                    Math.round(thisValueInBase * 100000.0) / 100000.0,
+                    Math.round(thatValueInBase * 100000.0) / 100000.0
             ) == 0;
         }
 
         @Override
         public String toString() {
-            return "Quantity(" + value + ", \"" + unit.name().toLowerCase() + "\")";
+            return "Quantity(" + value + ", " + unit.name() + ")";
         }
     }
 
-    // Main method to demonstrate functionality
+    // Main method to demonstrate functionality with new units
     public static void main(String[] args) {
-        // Feet to Inches equality
-        QuantityLength feet1 = new QuantityLength(1.0, LengthUnit.FEET);
-        QuantityLength inch12 = new QuantityLength(12.0, LengthUnit.INCH);
-        System.out.println("Input: " + feet1 + " and " + inch12);
-        System.out.println("Output: Equal (" + feet1.equals(inch12) + ")");
+        QuantityLength yard1 = new QuantityLength(1.0, LengthUnit.YARD);
+        QuantityLength feet3 = new QuantityLength(3.0, LengthUnit.FEET);
+        System.out.println("Input: " + yard1 + " and " + feet3);
+        System.out.println("Output: Equal (" + yard1.equals(feet3) + ")\n");
 
-        // Inch to Inch equality
-        QuantityLength inch1 = new QuantityLength(1.0, LengthUnit.INCH);
-        QuantityLength inch1_copy = new QuantityLength(1.0, LengthUnit.INCH);
-        System.out.println("Input: " + inch1 + " and " + inch1_copy);
-        System.out.println("Output: Equal (" + inch1.equals(inch1_copy) + ")");
+        QuantityLength inch36 = new QuantityLength(36.0, LengthUnit.INCH);
+        System.out.println("Input: " + yard1 + " and " + inch36);
+        System.out.println("Output: Equal (" + yard1.equals(inch36) + ")\n");
+
+        QuantityLength yard2 = new QuantityLength(2.0, LengthUnit.YARD);
+        QuantityLength yard2_copy = new QuantityLength(2.0, LengthUnit.YARD);
+        System.out.println("Input: " + yard2 + " and " + yard2_copy);
+        System.out.println("Output: Equal (" + yard2.equals(yard2_copy) + ")\n");
+
+        QuantityLength cm2 = new QuantityLength(2.0, LengthUnit.CENTIMETER);
+        QuantityLength cm2_copy = new QuantityLength(2.0, LengthUnit.CENTIMETER);
+        System.out.println("Input: " + cm2 + " and " + cm2_copy);
+        System.out.println("Output: Equal (" + cm2.equals(cm2_copy) + ")\n");
+
+        QuantityLength cm1 = new QuantityLength(1.0, LengthUnit.CENTIMETER);
+        QuantityLength inchFromCm = new QuantityLength(0.393701, LengthUnit.INCH);
+        System.out.println("Input: " + cm1 + " and " + inchFromCm);
+        System.out.println("Output: Equal (" + cm1.equals(inchFromCm) + ")");
     }
-}
