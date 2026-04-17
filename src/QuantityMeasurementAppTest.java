@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class QuantityMeasurementAppTest {
 
     @Test
+feature/UC3
     public void testEquality_FeetToFeet_SameValue() {
         QuantityMeasurementApp.QuantityLength feet1 = new QuantityMeasurementApp.QuantityLength(1.0, QuantityMeasurementApp.LengthUnit.FEET);
         QuantityMeasurementApp.QuantityLength feet2 = new QuantityMeasurementApp.QuantityLength(1.0, QuantityMeasurementApp.LengthUnit.FEET);
@@ -71,5 +72,51 @@ public class QuantityMeasurementAppTest {
         QuantityMeasurementApp.QuantityLength feet = new QuantityMeasurementApp.QuantityLength(1.0, QuantityMeasurementApp.LengthUnit.FEET);
         String invalidType = "1.0 feet";
         assertFalse(feet.equals(invalidType), "Object should not equal an object of a different type");
+
+    public void testEquality_SameValue() {
+        // Given
+        QuantityMeasurementApp.Feet feet1 = new QuantityMeasurementApp.Feet(1.0);
+        QuantityMeasurementApp.Feet feet2 = new QuantityMeasurementApp.Feet(1.0);
+
+        // When & Then
+        assertTrue(feet1.equals(feet2), "Two Feet objects with the same value should be equal");
+    }
+
+    @Test
+    public void testEquality_DifferentValue() {
+        // Given
+        QuantityMeasurementApp.Feet feet1 = new QuantityMeasurementApp.Feet(1.0);
+        QuantityMeasurementApp.Feet feet2 = new QuantityMeasurementApp.Feet(2.0);
+
+        // When & Then
+        assertFalse(feet1.equals(feet2), "Two Feet objects with different values should not be equal");
+    }
+
+    @Test
+    public void testEquality_NullComparison() {
+        // Given
+        QuantityMeasurementApp.Feet feet = new QuantityMeasurementApp.Feet(1.0);
+
+        // When & Then
+        assertFalse(feet.equals(null), "A Feet object should not be equal to null");
+    }
+
+    @Test
+    public void testEquality_NonNumericInput() {
+        // Given
+        QuantityMeasurementApp.Feet feet = new QuantityMeasurementApp.Feet(1.0);
+        String nonNumericInput = "1.0 ft"; // Different object type completely
+
+        // When & Then
+        assertFalse(feet.equals(nonNumericInput), "A Feet object should not be equal to an object of a different class type");
+    }
+
+    @Test
+    public void testEquality_SameReference() {
+        // Given
+        QuantityMeasurementApp.Feet feet = new QuantityMeasurementApp.Feet(1.0);
+
+        // When & Then
+        assertTrue(feet.equals(feet), "A Feet object should be equal to itself (reflexive property)");
     }
 }
